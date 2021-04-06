@@ -3,142 +3,137 @@
 
 #include "btree.h"
 
-// A utility function to get the height of the tree
-int height(PNODE N)
-{
-    if (N == NULL)
-        return 0;
-    return N->height;
+// Create a node
+struct BTreeNode* createNode(int val, struct BTreeNode* child) {
+    struct BTreeNode* newNode;
+    newNode = (struct BTreeNode*)malloc(sizeof(struct BTreeNode));
+    newNode->val[1] = val;
+    newNode->count = 1;
+    newNode->link[0] = root;
+    newNode->link[1] = child;
+    return newNode;
 }
 
-
-// A utility function to get maximum of two integers
-int maxOfTwo(int a, int b)
-{
-    return (a > b) ? a : b;
+// Insert node
+void insertNode(int val, int pos, struct BTreeNode* node,
+    struct BTreeNode* child) {
+    int j = node->count;
+    while (j > pos) {
+        node->val[j + 1] = node->val[j];
+        node->link[j + 1] = node->link[j];
+        j--;
+    }
+    node->val[j + 1] = val;
+    node->link[j + 1] = child;
+    node->count++;
 }
 
-/* Helper function that allocates a new node with the given key and
-    NULL left and right pointers. */
-PNODE newNode(int key)
-{
-    struct Node* node = (struct Node*)
-        malloc(sizeof(struct Node));
-    node->key = key;
-    node->left = NULL;
-    node->right = NULL;
-    node->height = 1;  // new node is initially added at leaf
-    return(node);
+// Split node
+void splitNode(int val, int* pval, int pos, struct BTreeNode* node,
+    struct BTreeNode* child, struct BTreeNode** newNode) {
+    int median, j;
+
+    if (pos > MIN)
+        median = MIN + 1;
+    else
+        median = MIN;
+
+    *newNode = (struct BTreeNode*)malloc(sizeof(struct BTreeNode));
+    j = median + 1;
+    while (j <= MAX) {
+        (*newNode)->val[j - median] = node->val[j];
+        (*newNode)->link[j - median] = node->link[j];
+        j++;
+    }
+    node->count = median;
+    (*newNode)->count = MAX - median;
+
+    if (pos <= MIN) {
+        insertNode(val, pos, node, child);
+    }
+    else {
+        insertNode(val, pos - median, *newNode, child);
+    }
+    *pval = node->val[node->count];
+    (*newNode)->link[0] = node->link[node->count];
+    node->count--;
 }
 
-// A utility function to right rotate subtree rooted with y
-// See the diagram given above.
-PNODE rightRotate(PNODE y)
-{
-    struct Node* x = y->left;
-    struct Node* T2 = x->right;
-
-    // Perform rotation
-    x->right = y;
-    y->left = T2;
-
-    // Update heights
-    y->height = maxOfTwo(height(y->left), height(y->right)) + 1;
-    x->height = maxOfTwo(height(x->left), height(x->right)) + 1;
-
-    // Return new root
-    return x;
-}
-
-// A utility function to left rotate subtree rooted with x
-// See the diagram given above.
-PNODE leftRotate(PNODE x)
-{
-    struct Node* y = x->right;
-    struct Node* T2 = y->left;
-
-    // Perform rotation
-    y->left = x;
-    x->right = T2;
-
-    //  Update heights
-    x->height = max(height(x->left), height(x->right)) + 1;
-    y->height = max(height(y->left), height(y->right)) + 1;
-
-    // Return new root
-    return y;
-}
-
-// Get Balance factor of node N
-int getBalance(PNODE N)
-{
-    if (N == NULL)
-        return 0;
-    return height(N->left) - height(N->right);
-}
-
-// Recursive function to insert a key in the subtree rooted
-// with node and returns the new root of the subtree.
-PNODE insert(PNODE node, int key)
-{
-    /* 1.  Perform the normal BST insertion */
-    if (node == NULL)
-        return(newNode(key));
-
-    if (key < node->key)
-        node->left = insert(node->left, key);
-    else if (key > node->key)
-        node->right = insert(node->right, key);
-    else // Equal keys are not allowed in BST
-        return node;
-
-    /* 2. Update height of this ancestor node */
-    node->height = 1 + max(height(node->left),
-        height(node->right));
-
-    /* 3. Get the balance factor of this ancestor
-          node to check whether this node became
-          unbalanced */
-    int balance = getBalance(node);
-
-    // If this node becomes unbalanced, then
-    // there are 4 cases
-
-    // Left Left Case
-    if (balance > 1 && key < node->left->key)
-        return rightRotate(node);
-
-    // Right Right Case
-    if (balance < -1 && key > node->right->key)
-        return leftRotate(node);
-
-    // Left Right Case
-    if (balance > 1 && key > node->left->key)
-    {
-        node->left = leftRotate(node->left);
-        return rightRotate(node);
+// Set the value
+int setValue(int val, int* pval,
+    struct BTreeNode* node, struct BTreeNode** child) {
+    int pos;
+    if (!node) {
+        *pval = val;
+        *child = NULL;
+        return 1;
     }
 
-    // Right Left Case
-    if (balance < -1 && key < node->right->key)
-    {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
+    if (val < node->val[1]) {
+        pos = 0;
     }
-
-    /* return the (unchanged) node pointer */
-    return node;
+    else {
+        for (pos = node->count;
+            (val < node->val[pos] && pos > 1); pos--)
+            ;
+        if (val == node->val[pos]) {
+            printf("Duplicates are not permitted\n");
+            return 0;
+        }
+    }
+    if (setValue(val, pval, node->link[pos], child)) {
+        if (node->count < MAX) {
+            insertNode(*pval, pos, node, *child);
+        }
+        else {
+            splitNode(*pval, pval, pos, node, *child, child);
+            return 1;
+        }
+    }
+    return 0;
 }
 
-// A utility function to print preorder traversal
-// of the tree.
-// The function also prints height of every node
-void preOrder(PNODE root)
-{
-    if (root != NULL)
-    {
-        printf("%d ", root->key);
-        preOrder(root->left);
-        preOrder(root->right);
+// Insert the value
+void insert(int val) {
+    int flag, i;
+    struct BTreeNode* child;
+
+    flag = setValue(val, &i, root, &child);
+    if (flag)
+        root = createNode(i, child);
+}
+
+// Search node
+void search(int val, int* pos, struct BTreeNode* myNode) {
+    if (!myNode) {
+        return;
+    }
+
+    if (val < myNode->val[1]) {
+        *pos = 0;
+    }
+    else {
+        for (*pos = myNode->count;
+            (val < myNode->val[*pos] && *pos > 1); (*pos)--)
+            ;
+        if (val == myNode->val[*pos]) {
+            printf("%d is found", val);
+            return;
+        }
+    }
+    search(val, pos, myNode->link[*pos]);
+
+    return;
+}
+
+// Traverse then nodes
+void traversal(struct BTreeNode* myNode) {
+    int i;
+    if (myNode) {
+        for (i = 0; i < myNode->count; i++) {
+            traversal(myNode->link[i]);
+            printf("%d ", myNode->val[i + 1]);
+        }
+        traversal(myNode->link[i]);
     }
 }

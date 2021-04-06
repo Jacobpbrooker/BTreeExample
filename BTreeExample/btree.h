@@ -1,18 +1,13 @@
 #pragma once
 // An AVL tree node
-typedef struct Node
-{
-    int key;
-    struct Node* left;
-    struct Node* right;
-    int height;
-}NODE, *PNODE;
+#define MAX 3
+#define MIN 2
 
-int height(struct Node* N);
-int maxOfTwo(int a, int b);
-PNODE newNode(int key);
-PNODE rightRotate(PNODE y);
-PNODE leftRotate(PNODE x);
-int getBalance(PNODE N);
-PNODE insert(PNODE node, int key);
-void preOrder(PNODE root);
+struct BTreeNode {
+	int val[MAX + 1], count;
+	struct BTreeNode* link[MAX + 1];
+};
+
+struct BTreeNode* root;
+
+struct BTreeNode* createNode(int val, struct BTreeNode* child);
