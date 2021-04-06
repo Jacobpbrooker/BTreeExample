@@ -15,8 +15,7 @@ struct BTreeNode* createNode(int val, struct BTreeNode* child) {
 }
 
 // Insert node
-void insertNode(int val, int pos, struct BTreeNode* node,
-    struct BTreeNode* child) {
+void insertNode(int val, int pos, struct BTreeNode* node, struct BTreeNode* child) {
     int j = node->count;
     while (j > pos) {
         node->val[j + 1] = node->val[j];
@@ -29,8 +28,7 @@ void insertNode(int val, int pos, struct BTreeNode* node,
 }
 
 // Split node
-void splitNode(int val, int* pval, int pos, struct BTreeNode* node,
-    struct BTreeNode* child, struct BTreeNode** newNode) {
+void splitNode(int val, int* pval, int pos, struct BTreeNode* node, struct BTreeNode* child, struct BTreeNode** newNode) {
     int median, j;
 
     if (pos > MIN)
@@ -60,8 +58,7 @@ void splitNode(int val, int* pval, int pos, struct BTreeNode* node,
 }
 
 // Set the value
-int setValue(int val, int* pval,
-    struct BTreeNode* node, struct BTreeNode** child) {
+int setValue(int val, int* pval, struct BTreeNode* node, struct BTreeNode** child) {
     int pos;
     if (!node) {
         *pval = val;

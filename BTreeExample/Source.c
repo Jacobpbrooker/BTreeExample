@@ -4,30 +4,22 @@
 
 #include "btree.h"
 
-/* Driver program to test above function*/
-int main()
-{
-    struct Node* root = NULL;
+int main() {
+	int val, ch;
 
-    /* Constructing tree given in the above figure */
-    root = insert(root, 10);
-    root = insert(root, 20);
-    root = insert(root, 30);
-    root = insert(root, 40);
-    root = insert(root, 50);
-    root = insert(root, 25);
+	insert(8);
+	insert(9);
+	insert(10);
+	insert(11);
+	insert(15);
+	insert(16);
+	insert(17);
+	insert(18);
+	insert(20);
+	insert(23);
 
-    /* The constructed AVL Tree would be
-              30
-             /  \
-           20   40
-          /  \     \
-         10  25    50
-    */
+	traversal(root);
 
-    printf("Preorder traversal of the constructed AVL"
-        " tree is \n");
-    preOrder(root);
-
-    return 0;
+	printf("\n");
+	search(11, &ch, root);
 }
