@@ -4,7 +4,7 @@
 #include "btree.h"
 
 // A utility function to get the height of the tree
-int height(struct Node* N)
+int height(PNODE N)
 {
     if (N == NULL)
         return 0;
@@ -20,7 +20,7 @@ int maxOfTwo(int a, int b)
 
 /* Helper function that allocates a new node with the given key and
     NULL left and right pointers. */
-struct Node* newNode(int key)
+PNODE newNode(int key)
 {
     struct Node* node = (struct Node*)
         malloc(sizeof(struct Node));
@@ -33,7 +33,7 @@ struct Node* newNode(int key)
 
 // A utility function to right rotate subtree rooted with y
 // See the diagram given above.
-struct Node* rightRotate(struct Node* y)
+PNODE rightRotate(PNODE y)
 {
     struct Node* x = y->left;
     struct Node* T2 = x->right;
@@ -52,7 +52,7 @@ struct Node* rightRotate(struct Node* y)
 
 // A utility function to left rotate subtree rooted with x
 // See the diagram given above.
-struct Node* leftRotate(struct Node* x)
+PNODE leftRotate(PNODE x)
 {
     struct Node* y = x->right;
     struct Node* T2 = y->left;
@@ -70,7 +70,7 @@ struct Node* leftRotate(struct Node* x)
 }
 
 // Get Balance factor of node N
-int getBalance(struct Node* N)
+int getBalance(PNODE N)
 {
     if (N == NULL)
         return 0;
@@ -79,7 +79,7 @@ int getBalance(struct Node* N)
 
 // Recursive function to insert a key in the subtree rooted
 // with node and returns the new root of the subtree.
-struct Node* insert(struct Node* node, int key)
+PNODE insert(PNODE node, int key)
 {
     /* 1.  Perform the normal BST insertion */
     if (node == NULL)
@@ -133,7 +133,7 @@ struct Node* insert(struct Node* node, int key)
 // A utility function to print preorder traversal
 // of the tree.
 // The function also prints height of every node
-void preOrder(struct Node* root)
+void preOrder(PNODE root)
 {
     if (root != NULL)
     {
