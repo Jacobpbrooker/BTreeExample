@@ -1,20 +1,21 @@
 #pragma once
-// An AVL tree node
+// BTree header file
 #define MAX 3
 #define MIN 2
 
-struct BTreeNode {
-	int val[MAX + 1], count;
+typedef struct BTreeNode {
+	int val[MAX + 1]; 
+	int count;
 	struct BTreeNode* link[MAX + 1];
-};
+}TREENODE, *PTREENODE;
 
-struct BTreeNode* root;
+PTREENODE root;
 
-struct BTreeNode* createNode(int val, struct BTreeNode* child);
-void insertNode(int val, int pos, struct BTreeNode* node, struct BTreeNode* child);
-void splitNode(int val, int* pval, int pos, struct BTreeNode* node, struct BTreeNode* child, struct BTreeNode** newNode);
-int setValue(int val, int* pval, struct BTreeNode* node, struct BTreeNode** child);
+PTREENODE createNode(int val, PTREENODE child);
+void insertNode(int val, int pos, PTREENODE node, PTREENODE child);
+void splitNode(int val, int* pval, int pos, PTREENODE node, PTREENODE child, PTREENODE* newNode);
+int setValue(int val, int* pval, PTREENODE node, PTREENODE* child);
 void insert(int val);
-void search(int val, int* pos, struct BTreeNode* myNode);
-void traversal(struct BTreeNode* myNode);
+void search(int val, int* pos, PTREENODE myNode);
+void traversal(PTREENODE myNode);
 

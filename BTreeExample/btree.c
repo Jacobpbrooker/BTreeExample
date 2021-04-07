@@ -4,9 +4,9 @@
 #include "btree.h"
 
 // Create a node
-struct BTreeNode* createNode(int val, struct BTreeNode* child) {
-    struct BTreeNode* newNode;
-    newNode = (struct BTreeNode*)malloc(sizeof(struct BTreeNode));
+PTREENODE createNode(int val, PTREENODE child) {
+    PTREENODE newNode;
+    newNode = (PTREENODE)malloc(sizeof(struct BTreeNode));
     newNode->val[1] = val;
     newNode->count = 1;
     newNode->link[0] = root;
@@ -15,7 +15,7 @@ struct BTreeNode* createNode(int val, struct BTreeNode* child) {
 }
 
 // Insert node
-void insertNode(int val, int pos, struct BTreeNode* node, struct BTreeNode* child) {
+void insertNode(int val, int pos, PTREENODE node, PTREENODE child) {
     int j = node->count;
     while (j > pos) {
         node->val[j + 1] = node->val[j];
@@ -28,7 +28,7 @@ void insertNode(int val, int pos, struct BTreeNode* node, struct BTreeNode* chil
 }
 
 // Split node
-void splitNode(int val, int* pval, int pos, struct BTreeNode* node, struct BTreeNode* child, struct BTreeNode** newNode) {
+void splitNode(int val, int* pval, int pos, PTREENODE node, PTREENODE child, PTREENODE* newNode) {
     int median, j;
 
     if (pos > MIN)
@@ -36,7 +36,7 @@ void splitNode(int val, int* pval, int pos, struct BTreeNode* node, struct BTree
     else
         median = MIN;
 
-    *newNode = (struct BTreeNode*)malloc(sizeof(struct BTreeNode));
+    *newNode = (PTREENODE)malloc(sizeof(struct BTreeNode));
     j = median + 1;
     while (j <= MAX) {
         (*newNode)->val[j - median] = node->val[j];
@@ -58,7 +58,7 @@ void splitNode(int val, int* pval, int pos, struct BTreeNode* node, struct BTree
 }
 
 // Set the value
-int setValue(int val, int* pval, struct BTreeNode* node, struct BTreeNode** child) {
+int setValue(int val, int* pval, PTREENODE node, PTREENODE* child) {
     int pos;
     if (!node) {
         *pval = val;
@@ -93,7 +93,7 @@ int setValue(int val, int* pval, struct BTreeNode* node, struct BTreeNode** chil
 // Insert the value
 void insert(int val) {
     int flag, i;
-    struct BTreeNode* child;
+    PTREENODE child;
 
     flag = setValue(val, &i, root, &child);
     if (flag)
@@ -101,7 +101,7 @@ void insert(int val) {
 }
 
 // Search node
-void search(int val, int* pos, struct BTreeNode* myNode) {
+void search(int val, int* pos, PTREENODE myNode) {
     if (!myNode) {
         return;
     }
@@ -124,7 +124,7 @@ void search(int val, int* pos, struct BTreeNode* myNode) {
 }
 
 // Traverse then nodes
-void traversal(struct BTreeNode* myNode) {
+void traversal(PTREENODE myNode) {
     int i;
     if (myNode) {
         for (i = 0; i < myNode->count; i++) {

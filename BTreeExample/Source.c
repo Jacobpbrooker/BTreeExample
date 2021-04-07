@@ -1,22 +1,21 @@
 // C program to insert a node in AVL tree
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "btree.h"
 
 int main() {
-	int val, ch;
+	int val;
+	int ch;
+	//srand(time(0));
+	
+	int runs = rand() % 10;
 
-	insert(8);
-	insert(9);
-	insert(10);
-	insert(11);
-	insert(15);
-	insert(16);
-	insert(17);
-	insert(18);
-	insert(20);
-	insert(23);
+	for (int i = 0; i < 10; i++)
+	{
+		insert(rand() % 100);
+	}
 
 	traversal(root);
 
