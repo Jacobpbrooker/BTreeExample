@@ -1,5 +1,5 @@
 // C program for B-Tree
-// Base code same taken from https://www.programiz.com/dsa/b-tree
+// Base code sample taken from https://www.programiz.com/dsa/b-tree
 //
 // Modified by: Jacob Brooker
 // 
@@ -95,11 +95,11 @@ void splitNode(int val, int* pval, int pos, PTREENODE node, PTREENODE child, PTR
 int setValue(int val, int* pval, PTREENODE node, PTREENODE* child) 
 {
     int pos;
-    if (!node)                                                                  // if the node is NULL (no current B-Tree) 
+    if (!node)                                                                  // if the node is NULL (no current node) 
     {
         *pval = val;                                                            // set the int pointer to the value of the int passed
         *child = NULL;                                                          // set the child pointer to null
-        return 1;                                                               // return 1 to set insert to create a node
+        return 1;                                                               // return 1 to set insert() to create a node
     }
 
     if (val < node->val[1])                                                     // is this new value less than the value in the node at position 1
@@ -117,11 +117,12 @@ int setValue(int val, int* pval, PTREENODE node, PTREENODE* child)
     
     if (setValue(val, pval, node->link[pos], child))                            // recursive call to setValue, check the child node to see if there is too many keys, and the further if child / parents need splits
     {
-        if (node->count < MAX) {
+        if (node->count < MAX)                                                  // node is not full, and we can insert the key 
+        {
             insertNode(*pval, pos, node, *child);
         }
         else {
-            splitNode(*pval, pval, pos, node, *child, child);
+            splitNode(*pval, pval, pos, node, *child, child);                   // otherwise node is full and we need to split
             return 1;
         }
     }
@@ -135,7 +136,7 @@ void insert(int val) {
 
     PTREENODE child;                                                            // create a pointer to a treeNode called child
 
-    flag = setValue(val, &i, root, &child);                                     // returns a 1 if a new node needs to be created (in instance of a NULL root node and if the node needs to be split
+    flag = setValue(val, &i, root, &child);                                     // returns a 1 if a new node needs to be created (in instance of a NULL root node and if the node needs to be split)
     if (flag == 1)
         root = createNode(i, child);                                            // new node is required (root node is NULL or node is full and we need to split)
 }

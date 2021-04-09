@@ -1,5 +1,5 @@
 // C program for B-Tree
-// Base code same taken from https://www.programiz.com/dsa/b-tree
+// Base code samplee taken from https://www.programiz.com/dsa/b-tree
 //
 // Modified by: Jacob Brooker
 // 
@@ -15,8 +15,8 @@
 
 #define INSERTRUN 10
 
-int main() {
-	int val;
+int main() 
+{
 	int ch;
 	//srand(time(0));
 
@@ -30,4 +30,6 @@ int main() {
 	printf("\n");
 
 	search(70, &ch, root);
+
+	exit(EXIT_SUCCESS);
 }

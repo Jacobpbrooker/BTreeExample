@@ -1,5 +1,14 @@
 #pragma once
 // BTree header file
+// C program for B-Tree
+// Base code sample taken from https://www.programiz.com/dsa/b-tree
+//
+// Modified by: Jacob Brooker
+// 
+// PROG 71040 OS and Security
+//
+// April 09, 2021
+
 #define MAX 3							// this B-Tree is of degree MAX
 #define MIN 2							// the node must have at minumum 
 
